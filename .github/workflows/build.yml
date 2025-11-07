@@ -15,6 +15,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Debug - List files
+      run: |
+        echo "=== Project Structure ==="
+        ls -la
+        echo "=== Dockerfiles ==="
+        find . -name "Dockerfile*" -type f
+        echo "=== Directories ==="
+        find . -type d -name "words" -o -name "web" -o -name "db"
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
@@ -25,29 +34,10 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push Words service
+    - name: Try build from root
       uses: docker/build-push-action@v5
       with:
-        context: ./words
-        file: ./words/Dockerfile
-        push: true
-        tags: |
-          ghcr.io/minhthuc2104/wordsmith-words:latest
-
-    - name: Build and push Web service
-      uses: docker/build-push-action@v5
-      with:
-        context: ./web
-        file: ./web/Dockerfile
-        push: true
-        tags: |
-          ghcr.io/minhthuc2104/wordsmith-web:latest
-
-    - name: Build and push DB service
-      uses: docker/build-push-action@v5
-      with:
-        context: ./db
-        file: ./db/Dockerfile
-        push: true
-        tags: |
-          ghcr.io/minhthuc2104/wordsmith-db:latest
+        context: .
+        file: ./Dockerfile
+        push: false
+        tags: ghcr.io/minhthuc2104/wordsmith-test:latest

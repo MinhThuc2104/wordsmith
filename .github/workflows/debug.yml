@@ -1,0 +1,26 @@
+name: Debug Project Structure
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Show project structure
+      run: |
+        echo "=== ROOT DIRECTORY ==="
+        ls -la
+        echo ""
+        echo "=== ALL FILES AND FOLDERS ==="
+        find . -type f -name "Dockerfile*" -o -name "docker-compose*" -o -name "*.yml" -o -name "*.yaml" | head -20
+        echo ""
+        echo "=== DIRECTORY TREE ==="
+        find . -type d | sort
+        echo ""
+        echo "=== DOCKER COMPOSE FILE ==="
+        cat docker-compose.yml || echo "No docker-compose.yml found"
